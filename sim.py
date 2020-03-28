@@ -20,9 +20,9 @@ LT_MOD=1.2
 LT_CAST_TIME=1.5
 
 spec_properties = {} 
-spec_properties['sm/ruin']={"shadow mod": 1.21, "imp": True, "succubus": False, "ruin":True, "isb_flag":True, "sb mana": 362}
-spec_properties['ds/ruin']={"shadow mod": 1.27, "imp": False, "succubus": False, "ruin":True, "isb_flag":True, "sb mana": 355}
-spec_properties['md/ruin']={"shadow mod": 1.21, "imp": False, "succubus": True, "ruin":True, "isb_flag":True, "sb mana": 362}
+spec_properties['sm_ruin']={"shadow mod": 1.21, "imp": True, "succubus": False, "ruin":True, "isb_flag":True, "sb mana": 362}
+spec_properties['ds_ruin']={"shadow mod": 1.27, "imp": False, "succubus": False, "ruin":True, "isb_flag":True, "sb mana": 355}
+spec_properties['md_ruin']={"shadow mod": 1.21, "imp": False, "succubus": True, "ruin":True, "isb_flag":True, "sb mana": 362}
 
 IMPROVED_IMP = 1.0
 DOT_MITIGATION = .006
