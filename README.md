@@ -47,9 +47,9 @@ Succubus rotation: Always autoattack, always cast lash of pain (sniping coming s
 Instructions are for linux, but should work elsewhere.
 
 ###### Requirements
-python3
-numpy
-parallel (optional but saves a lot of time for multicore processing)
+* python3
+* numpy
+* parallel (optional but saves a lot of time for multicore processing)
 
 ###### Instructions
 
