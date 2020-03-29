@@ -11,8 +11,8 @@ process_name = str(os.getpid()) + str(
     datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")+str(random.random())
 )
 
-spec = "md_ruin_wo_corruption"
-numSims = 20
+spec = "ds_ruin_w_corruption"
+numSims = 1000
 dist_list = np.arange(0,1.05,.05)
 for d in dist_list:
     d=int(d*100)/100

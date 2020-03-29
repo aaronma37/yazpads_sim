@@ -22,7 +22,7 @@ LT_CAST_TIME=1.5
 spec_properties = {} 
 spec_properties['sm_ruin_w_corruption']={"shadow mod": 1.21, "imp": True, "succubus": False, "ruin":True, "isb_flag":True, "sb mana": 362, "casts corruption":True, 'extra aff hit':.1, 'nf_flag': True}
 spec_properties['md_ruin_wo_corruption']={"shadow mod": 1.21, "imp": False, "succubus": True, "ruin":True, "isb_flag":True, "sb mana": 362, "casts corruption":False, 'extra aff hit':0, 'nf_flag': False}
-spec_properties['ds_ruin']={"shadow mod": 1.27, "imp": False, "succubus": False, "ruin":True, "isb_flag":True, "sb mana": 355}
+spec_properties['ds_ruin_w_corruption']={"shadow mod": 1.27, "imp": False, "succubus": False, "ruin":True, "isb_flag":True, "sb mana": 355, "casts corruption":True, 'extra aff hit':0, 'nf_flag': False}
 spec_properties['md_ruin']={"shadow mod": 1.21, "imp": False, "succubus": True, "ruin":True, "isb_flag":True, "sb mana": 362}
 
 IMPROVED_IMP = 1.0

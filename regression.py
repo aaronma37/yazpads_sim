@@ -10,7 +10,8 @@ from sklearn.preprocessing import PolynomialFeatures
 from sklearn import linear_model
 
 
-target = "md_ruin_wo_corruption"
+target = "ds_ruin_w_corruption"
+# target = "md_ruin_wo_corruption"
 main_path=os.path.dirname(os.path.realpath(__file__))
 datapath=main_path+'/'+target+'/data/'
 coeffpath=main_path+'/'+target+'/coeff/'
