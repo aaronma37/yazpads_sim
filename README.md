@@ -56,8 +56,8 @@ Instructions are for linux, but should work elsewhere.
 Modify spec in main.py
 >vim main.py
 
-Run in parallel (may take a couple hours).  Replace <num_cores> with the number of cpu cores you want to use
->parallel --bar 'python3 main.py' ::: $(sec <num_cores>)
+Run in parallel (may take a couple hours).  Replace *num_cores* with the number of cpu cores you want to use
+>parallel --bar 'python3 main.py' ::: $(sec *num_cores*)
 
 Modify spec in regression.py
 >vim regression.py
@@ -66,7 +66,7 @@ Run regression.py
 >python3 regression.py
 
 The coefficients for uploading to google sheets should be in 
->/yazpads_sim/<spec>/coeff/coef_.csv
+>/yazpads_sim/*spec*/coeff/coef_.csv
   
 ## TODO
 * Fix google sheets rounding errors
@@ -92,6 +92,7 @@ The coefficients for uploading to google sheets should be in
 
 ## Changelog 
 ###### 03/28/2020
+  * Created github/README.md
   * Added MD/RUIN
   * Decided to switch to increments of 5% for percentiles
   * Added probability density functions, cumulative density functions on PDF tab
