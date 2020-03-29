@@ -62,6 +62,11 @@ The coefficients for uploading to google sheets should be in
 * Debug MD/RUIN succubus
 * Implement lash sniping for succubus (only cast lash of pain when ISB is down)
 * Implement ISB uptime via composition of warlocks in raid as opposed to single lock (gives better estimate of crit/sp)
+* Automatic set bonuses
+* Force single checkbox per slot
+* Clean up gearsheet so it makes sense
+* Discussion regarding stat weights (in particular crit and hit for high percentiles)
+* Option to turn off calculations per slot (faster loading for everything else)
 
 ## Changelog 
 ###### 03/28/2020
