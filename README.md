@@ -69,6 +69,15 @@ The coefficients for uploading to google sheets should be in
 * Clean up gearsheet so it makes sense
 * Discussion regarding stat weights (in particular crit and hit for high percentiles)
 * Option to turn off calculations per slot (faster loading for everything else)
+* Switch all probabilies to percentiles for readability
+
+## Discussion
+
+###### High percentile stat weights
+
+###### High dps values for MD/RUIN
+
+###### ISB uptime vs. composition of warlocks/their crit % in raid
 
 ## Changelog 
 ###### 03/28/2020
