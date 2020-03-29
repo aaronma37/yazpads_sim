@@ -42,7 +42,17 @@ Assumptions:  Always use succubus, the black book is active from 0 to 25 seconds
 
 Succubus rotation: Always autoattack, always cast lash of pain (sniping coming soon)
 
-## Instructions for running simulation
+## Running simulation
+
+Instructions are for linux, but should work elsewhere.
+
+###### Requirements
+python3
+numpy
+parallel (optional but saves a lot of time for multicore processing)
+
+###### Instructions
+
 Modify spec in main.py
 >vim main.py
 
@@ -70,6 +80,7 @@ The coefficients for uploading to google sheets should be in
 * Discussion regarding stat weights (in particular crit and hit for high percentiles)
 * Option to turn off calculations per slot (faster loading for everything else)
 * Switch all probabilies to percentiles for readability
+* Add args to python scripts
 
 ## Discussion
 
