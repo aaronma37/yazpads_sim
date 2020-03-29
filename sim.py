@@ -55,7 +55,7 @@ class Succubus:
         self.MELEE_MISS = .08
         self.MELEE_DODGE = .065
         self.MELEE_CRIT = .084
-        self.MELEE_GLANCE = .40
+        self.MELEE_GLANCING = .40
         self.MELEE_BLOCK = 0
         
     def set_values(self,encounter_time, isb_times, shadow_mod, md_bonus, bb_times):
@@ -117,7 +117,7 @@ class Succubus:
 
             #NORMAL
             self.statistics['damage']+=dmg*self.MD_BONUS*self.BB_BONUS
-        return self.auto_attack_cd
+            return self.auto_attack_cd
 
     def end(self):
         return 1000
@@ -134,7 +134,7 @@ class Succubus:
         delta_t = 0
         self.BB_BONUS=1
         while self.t < self.ENCOUNTER_TIME:
-          if self.t > self.BB_TIMES and self.t <= self.BB_TIMES:
+          if self.t > self.BB_TIMES[0] and self.t <= self.BB_TIMES[1]:
             self.BB_BONUS = 2
           else:
             self.BB_BONUS = 1
@@ -146,7 +146,7 @@ class Succubus:
         delta_t = 0
         self.BB_BONUS=1
         while self.t < self.ENCOUNTER_TIME:
-          if self.t > self.BB_TIMES and self.t <= self.BB_TIMES:
+          if self.t > self.BB_TIMES[0] and self.t <= self.BB_TIMES[1]:
             self.BB_BONUS = 2
           else:
             self.BB_BONUS = 1

@@ -11,8 +11,8 @@ process_name = str(os.getpid()) + str(
     datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")+str(random.random())
 )
 
-spec = "sm_ruin_w_corruption"
-numSims = 1000
+spec = "md_ruin_wo_corruption"
+numSims = 20
 dist_list = np.arange(0,1.05,.05)
 for d in dist_list:
     d=int(d*100)/100
@@ -43,7 +43,7 @@ for sp_ in params["sp"]:
                             dps_list[-1]+=imp.statistics['dps']
                         if player.succubus:
                             succubus = Succubus()
-                            succubus.set_values(time_)
+                            succubus.set_values(time_,[[0,0]],player.SHADOW_MOD,1.1,[0,25])
                             succubus.run()
                             dps_list[-1]+=succubus.statistics['dps']
                     dps_list.sort()

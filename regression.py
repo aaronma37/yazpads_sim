@@ -10,7 +10,7 @@ from sklearn.preprocessing import PolynomialFeatures
 from sklearn import linear_model
 
 
-target = "sm_ruin_w_corruption"
+target = "md_ruin_wo_corruption"
 main_path=os.path.dirname(os.path.realpath(__file__))
 datapath=main_path+'/'+target+'/data/'
 coeffpath=main_path+'/'+target+'/coeff/'
@@ -51,12 +51,12 @@ for d in dist_list:
     y_dist[int(d*100)/100]= []
 for k,v in n.items():
     # X.append([sp[i],crit[i],hit[i]])
-    X.append([k[0],k[1],k[2],k[3],k[4]])
+    X.append([k[0],k[1],k[2],k[3]/1000,k[4]])
     y_avg.append(v['avg'])
     for k in y_dist.keys():
         y_dist[k].append(v['dist'][k])
 
-predict = [[473,.19,.85,4793,30]]
+predict = [[498,.278,.84,4558/1000,60]]
 
 poly = PolynomialFeatures(degree=2)
 X_ = poly.fit_transform(X)
@@ -75,23 +75,37 @@ for k in y_dist.keys():
     clf_dist[k].fit(X_, y_dist[k])
     print(clf_dist[k].coef_)
     # np.savetxt(coeffpath+"coef_dist"+str(k)+".csv", clf_dist[k].coef_, delimiter=',', fmt='%f')
-exit()
 
 output_coeff = np.asarray([clf_avg.coef_])
 print(output_coeff,clf_avg.coef_)
 for k in y_dist.keys():
     output_coeff = np.append(output_coeff, [np.asarray(clf_dist[k].coef_)],axis=0)
 print(output_coeff)
+
+# import csv
+
+# with open(coeffpath+"coef_.csv","w+") as fp:
+#     csvWriter = csv.writer(fp,delimiter=',')
+#     csvWriter.writerows(output_coeff)
+
+
 np.savetxt(coeffpath+"coef_.csv", output_coeff, delimiter=',', fmt='%f')
 
 
 # print(input_text)
 # print(clf_avg.predict(predict_))
 # print(predict_[0])
-# ans=0
-# for k in range(len(clf_avg.coef_)):
-#     ans+=clf_avg.coef_[k]*predict_[0][k]
-    # print(clf_avg.coef_[k],predict_[0][k],ans)
+print(clf_avg.coef_)
+ans=0
+for k in range(len(clf_avg.coef_)):
+    ans+=clf_avg.coef_[k]*predict_[0][k]
+    print(clf_avg.coef_[k],predict_[0][k],ans)
+print('avg',ans)
+for d in y_dist.keys():
+    ans=0
+    for k in range(len(clf_avg.coef_)):
+        ans+=clf_dist[d].coef_[k]*predict_[0][k]
+    print(d,ans)
 # print(ans+clf.intercept_)
 
 
