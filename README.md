@@ -2,6 +2,8 @@
 
 (work in progress!)
 
+email: yazpadFB@gmail.com to point out problems
+
 The purpose of this simulation is to try to recover probabilistic properties of boss encounters.  
 
 ###### Features
