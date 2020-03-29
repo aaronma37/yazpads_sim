@@ -4,15 +4,19 @@ import os
 import numpy as np
 import pickle
 import time
-from sims import Player, Imp, Succubus
+from sim import Player, Imp, Succubus
 from copy import deepcopy
 
 process_name = str(os.getpid()) + str(
     datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")+str(random.random())
 )
 
-spec = "md_ruin"
+spec = "sm_ruin_w_corruption"
+numSims = 1000
 dist_list = np.arange(0,1.05,.05)
+for d in dist_list:
+    d=int(d*100)/100
+print(dist_list)
 main_path=os.path.dirname(os.path.realpath(__file__))
 save_path = main_path+'/'+spec+'/data/'
 
@@ -27,8 +31,8 @@ for sp_ in params["sp"]:
             for mana_ in params["mana"]:
                 for time_ in params["time"]:
                     dps_list = []
-                    for i in range(1000):
-                        player = Player()
+                    for i in range(numSims):
+                        player = Player(spec)
                         player.set_values(sp_,hit_,crit_,mana_,time_)
                         player.run()
                         dps_list.append(player.statistics['dps'])
@@ -46,9 +50,9 @@ for sp_ in params["sp"]:
                     dist = {}
                     for d in dist_list:
                         if d == 1:
-                            dist[d]=dps_list[-1]
+                            dist[int(d*100)/100]=dps_list[-1]
                         else:
-                            dist[d]=dps_list[int(d*len(dps_list))]
+                            dist[int(d*100)/100]=dps_list[int(d*len(dps_list))]
                     avg = sum(dps_list)/len(dps_list)
                     val.append([(sp_,crit_,hit_,mana_,time_),(avg,dist)])
 

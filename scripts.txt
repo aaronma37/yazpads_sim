@@ -1,0 +1,1 @@
+parallel --bar 'python3 main.py' ::: $(seq 10)

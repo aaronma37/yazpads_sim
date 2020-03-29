@@ -20,7 +20,8 @@ LT_MOD=1.2
 LT_CAST_TIME=1.5
 
 spec_properties = {} 
-spec_properties['sm_ruin']={"shadow mod": 1.21, "imp": True, "succubus": False, "ruin":True, "isb_flag":True, "sb mana": 362}
+spec_properties['sm_ruin_w_corruption']={"shadow mod": 1.21, "imp": True, "succubus": False, "ruin":True, "isb_flag":True, "sb mana": 362, "casts corruption":True, 'extra aff hit':.1, 'nf_flag': True}
+spec_properties['md_ruin_wo_corruption']={"shadow mod": 1.21, "imp": False, "succubus": True, "ruin":True, "isb_flag":True, "sb mana": 362, "casts corruption":False, 'extra aff hit':0, 'nf_flag': False}
 spec_properties['ds_ruin']={"shadow mod": 1.27, "imp": False, "succubus": False, "ruin":True, "isb_flag":True, "sb mana": 355}
 spec_properties['md_ruin']={"shadow mod": 1.21, "imp": False, "succubus": True, "ruin":True, "isb_flag":True, "sb mana": 362}
 
@@ -29,6 +30,132 @@ DOT_MITIGATION = .006
 MITIGATION = .06
 MOD = 1
 
+
+class Succubus:
+    def __init__(self):
+        self.statistics = {'damage':0, 'hits':0}
+        self.damage = 0
+        self.t = 0
+        self.auto_attack_cd = 2
+        self.BB_TIMES = [0,0]
+        self.lash_of_pain_cd = 7.0
+        self.log = []
+        self.HIT=0
+        self.CRIT=0
+        self.SP=0
+        self.mana = 1898
+        self.LASH_MANA_COST= 115
+        self.LASH_OF_PAIN_BASE = 160
+        self.MD_BONUS = 1.0
+        self.CRIT = .0608
+        self.HIT = .83
+        self.SHADOW_MOD = 0
+        self.BB_BONUS = 1.0
+        self.isb_times = []
+        self.MELEE_MISS = .08
+        self.MELEE_DODGE = .065
+        self.MELEE_CRIT = .084
+        self.MELEE_GLANCE = .40
+        self.MELEE_BLOCK = 0
+        
+    def set_values(self,encounter_time, isb_times, shadow_mod, md_bonus, bb_times):
+        self.ENCOUNTER_TIME=encounter_time
+        self.SHADOW_MOD = shadow_mod
+        self.isb_times = isb_times
+        self.MD_BONUS = md_bonus
+        self.BB_TIMES = bb_times
+
+    def outside_interval(self,t):
+        for interval in self.isb_times:
+            if t > interval[0] and t < interval[1]:
+                return interval[1]-t
+        return 0
+
+    def castLashOfPain(self):
+        '''
+            Only casts outside of ISB intervals
+        '''
+        until_outside_interval = self.outside_interval(self.t)
+        if until_outside_interval <= 0:
+            self.mana -= self.LASH_MANA_COST
+            if random.random() < self.HIT:
+                self.statistics['hits']+=1
+                dmg = self.LASH_OF_PAIN_BASE*self.SHADOW_MOD*(1-MITIGATION)*self.MD_BONUS*self.BB_BONUS
+                if random.random() < self.CRIT:
+                    self.statistics['damage']+=dmg*1.5
+                else:
+                    self.statistics['damage']+=dmg
+            return self.lash_of_pain_cd
+        else:
+            return until_outside_interval
+
+
+    def castAutoAttack(self):
+            dmg = random.randint(100,135)
+            carry_over = 0 
+            roll = random.random()
+            if roll < self.MELEE_MISS + carry_over:
+                return self.auto_attack_cd
+            carry_over+=self.MELEE_MISS
+
+            if roll < self.MELEE_DODGE + carry_over:
+                return self.auto_attack_cd
+            carry_over+=self.MELEE_DODGE
+
+            if roll < self.MELEE_GLANCING + carry_over:
+                self.statistics['damage']+=dmg*self.MD_BONUS*self.BB_BONUS*.65
+                return self.auto_attack_cd
+            carry_over+=self.MELEE_GLANCING
+
+            if roll < self.MELEE_BLOCK + carry_over:
+                return self.auto_attack_cd
+            carry_over+=self.MELEE_BLOCK
+
+            if roll < self.MELEE_CRIT + carry_over:
+                self.statistics['damage']+=dmg*self.MD_BONUS*self.BB_BONUS*2.0
+                return self.auto_attack_cd
+
+            #NORMAL
+            self.statistics['damage']+=dmg*self.MD_BONUS*self.BB_BONUS
+        return self.auto_attack_cd
+
+    def end(self):
+        return 1000
+
+    def getAction(self):
+        if self.mana > self.FB_MANA_COST:
+            return self.castFirebolt()
+        else:
+            return self.end()
+
+    def run(self):
+        #Auto attacks
+        self.t=0
+        delta_t = 0
+        self.BB_BONUS=1
+        while self.t < self.ENCOUNTER_TIME:
+          if self.t > self.BB_TIMES and self.t <= self.BB_TIMES:
+            self.BB_BONUS = 2
+          else:
+            self.BB_BONUS = 1
+          delta_t = self.castAutoAttack()
+          self.t+=delta_t
+
+        #Lashes of pain
+        self.t = 0
+        delta_t = 0
+        self.BB_BONUS=1
+        while self.t < self.ENCOUNTER_TIME:
+          if self.t > self.BB_TIMES and self.t <= self.BB_TIMES:
+            self.BB_BONUS = 2
+          else:
+            self.BB_BONUS = 1
+          delta_t = self.castLashOfPain()
+          self.t+=delta_t
+
+        self.statistics['dps']=self.statistics['damage']/self.ENCOUNTER_TIME
+
+        return self.statistics
 
 class Imp:
     def __init__(self):
@@ -80,7 +207,7 @@ class Imp:
         return self.statistics
 
 class Player:
-    def __init__(self, spec, casts_corruption):
+    def __init__(self, spec):
         self.statistics = {'damage':0,
                       'sb_hits':0,
                       'corr_hits':0,
@@ -89,18 +216,17 @@ class Player:
                       'life_taps': 0}
         self.spec = spec
         #spec_properties['md/ruin']={"shadow mod": 1.27, "imp": False, "succubus": True, "ruin":True, "isb_flag":True}
-        self.pets = [] 
-        if spec_properties[spec]['succubus']:
-            self.pets.append(Succubus())
-        if spec_properties[spec]['imp']:
-            self.pets.append(Imp())
+        self.imp = spec_properties[spec]['imp']
+        self.succubus = spec_properties[spec]['succubus']
         self.ruin = spec_properties[spec]['ruin']
         self.isb_flag = spec_properties[spec]['isb_flag']
         self.SHADOW_MOD = spec_properties[spec]['shadow mod']
         self.SB_MANA=spec_properties[spec]['sb mana']
+        self.AFF_HIT_PLUS = spec_properties[spec]['extra aff hit']
+        self.nf_flag = spec_properties[spec]['nf_flag']
 
         self.damage = 0
-        self.casts_corruption = casts_corruption
+        self.casts_corruption = spec_properties[spec]['casts corruption']
         self.db_corruption = False
         self.db_isb = False
         self.talisman_ticks = 1
@@ -129,10 +255,7 @@ class Player:
     def set_values(self,sp,hit,crit,mana,encounter_time):
         self.SP=sp
         self.CRIT=crit
-        if spec == "sm":
-            self.AFF_HIT = hit + .1
-        else:
-            self.AFF_HIT = hit
+        self.AFF_HIT = hit + self.AFF_HIT_PLUS
         self.DES_HIT = hit 
         self.mana=mana
         self.ENCOUNTER_TIME=encounter_time
@@ -201,7 +324,7 @@ class Player:
     def processEvents(self,delta_t):
         if self.db_corruption:
             if self.corruption_ticks[0] >= self.t and self.corruption_ticks[0] < self.t+delta_t:
-                if random.random() < .04 and nf_flag:
+                if random.random() < .04 and self.nf_flag:
                     self.nightfall_proc = True
                     # print("NF")
                 temp_tb = 0

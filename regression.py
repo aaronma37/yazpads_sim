@@ -10,15 +10,16 @@ from sklearn.preprocessing import PolynomialFeatures
 from sklearn import linear_model
 
 
-target = "md_ruin"
+target = "sm_ruin_w_corruption"
 main_path=os.path.dirname(os.path.realpath(__file__))
-datapath+='/'+target+'/data/'
-os.chdir(data_path)
+datapath=main_path+'/'+target+'/data/'
+coeffpath=main_path+'/'+target+'/coeff/'
+os.chdir(datapath)
 
 dist_list = np.arange(0,1.05,.05) 
 
 fp_list=[]
-for file in os.listdir(data_path):
+for file in os.listdir(datapath):
     fp_list.append(file)
 print(datapath+"file #: ", len(fp_list))
 
@@ -37,16 +38,17 @@ for fp in fp_list:
         if n.get(ind) is None:
             n[ind] = {"avg": 0, "dist": {}}
             for d in dist_list:
-                n[ind][dist][d]=0
+                n[ind]['dist'][int(d*100)/100]=0
         n[ind]['avg']+=avg/10
         for k in n[ind]['dist'].keys():
             n[ind]['dist'][k]+=dist[k]/10
 
-
 X = []
 y_avg = []
 y_dist = {}
-y_dist =  {.1: [], .2:[], .3:[], .4:[], .5:[], .6:[], .7:[], .8:[], .9:[]}
+# y_dist =  {.1: [], .2:[], .3:[], .4:[], .5:[], .6:[], .7:[], .8:[], .9:[]}
+for d in dist_list:
+    y_dist[int(d*100)/100]= []
 for k,v in n.items():
     # X.append([sp[i],crit[i],hit[i]])
     X.append([k[0],k[1],k[2],k[3],k[4]])
@@ -61,16 +63,26 @@ X_ = poly.fit_transform(X)
 predict_ = poly.fit_transform(predict)
 
 
+
 ###
 clf_avg = linear_model.LinearRegression(fit_intercept=False)
 clf_avg.fit(X_, y_avg)
-np.savetxt("coeff/coef_avg.csv", clf_avg.coef_, delimiter=',', fmt='%f')
+# np.savetxt(coeffpath+"coef_avg.csv", clf_avg.coef_, delimiter=',', fmt='%f')
 
 clf_dist = {}
 for k in y_dist.keys():
     clf_dist[k] = linear_model.LinearRegression(fit_intercept=False)
     clf_dist[k].fit(X_, y_dist[k])
-    np.savetxt("coeff/coef_dist"+str(k)+".csv", clf_dist[k].coef_, delimiter=',', fmt='%f')
+    print(clf_dist[k].coef_)
+    # np.savetxt(coeffpath+"coef_dist"+str(k)+".csv", clf_dist[k].coef_, delimiter=',', fmt='%f')
+exit()
+
+output_coeff = np.asarray([clf_avg.coef_])
+print(output_coeff,clf_avg.coef_)
+for k in y_dist.keys():
+    output_coeff = np.append(output_coeff, [np.asarray(clf_dist[k].coef_)],axis=0)
+print(output_coeff)
+np.savetxt(coeffpath+"coef_.csv", output_coeff, delimiter=',', fmt='%f')
 
 
 # print(input_text)
