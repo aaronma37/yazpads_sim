@@ -1,1 +1,3 @@
-# yazpads_sim
+## Yazpad's warlock simulation
+
+#Specs
