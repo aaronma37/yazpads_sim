@@ -12,6 +12,8 @@ parse given several attempts
 * Gear comparisons
 * Spec comparisons (see spec details below)
 * Dps vs. time
+* Gear values determined with respect to their own stats as opposed to finding the stat weights of currennt gear and
+calculating it based on that
 
 
 
